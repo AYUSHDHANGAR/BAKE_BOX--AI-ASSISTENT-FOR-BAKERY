@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAKEBOX - Master Product Image Catalog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0d0e12;
+      --bg-card: #16171e;
+      --bg-card-hover: #1f2029;
+      --accent-gold: #e5b95f;
+      --accent-gold-glow: rgba(229, 185, 95, 0.28);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #272a36;
+      --badge-ace: #1e3a8a;
+      --badge-prem: #4c1d95;
+      --badge-studio: #b45309;
+      --badge-party: #0f766e;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    header {
+      background: linear-gradient(180deg, #181a24 0%, #0d0e12 100%);
+      border-bottom: 1px solid var(--border-color);
+      padding: 28px 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #e5b95f 0%, #c49535 100%);
+      color: #0d0e12;
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 26px;
+      letter-spacing: 2px;
+      padding: 10px 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px var(--accent-gold-glow);
+    }
+    .header-text h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .header-text p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .controls {
+      max-width: 1440px;
+      margin: 28px auto 16px;
+      padding: 0 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 9px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      color: #fff;
+      border-color: #4b5162;
+    }
+    .filter-btn.active {
+      background: var(--accent-gold);
+      color: #0d0e12;
+      border-color: var(--accent-gold);
+      box-shadow: 0 2px 14px var(--accent-gold-glow);
+    }
+    .search-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      outline: none;
+      width: 280px;
+      font-size: 14px;
+    }
+    .search-box:focus {
+      border-color: var(--accent-gold);
+    }
+    .flavor-pills {
+      max-width: 1440px;
+      margin: 0 auto 26px;
+      padding: 0 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .flavor-pill {
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .flavor-pill:hover {
+      border-color: var(--accent-gold);
+      color: #fff;
+    }
+    .flavor-pill.active {
+      background: rgba(229, 185, 95, 0.15);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+    .grid-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 22px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+      border-color: #4b5162;
+    }
+    .card.studio-highlight {
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 8px 24px var(--accent-gold-glow);
+    }
+    .img-wrap {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      background: #111217;
+      overflow: hidden;
+    }
+    .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .card:hover .img-wrap img {
+      transform: scale(1.05);
+    }
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+    }
+    .badge-ace {
+      background: rgba(30, 58, 138, 0.92);
+      color: #93c5fd;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+    }
+    .badge-premium {
+      background: rgba(76, 29, 149, 0.92);
+      color: #c4b5fd;
+      border: 1px solid rgba(196, 181, 253, 0.3);
+    }
+    .badge-studio {
+      background: rgba(180, 83, 9, 0.95);
+      color: #fef3c7;
+      border: 1px solid var(--accent-gold);
+    }
+        .badge-custom {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #fff;
+      border: 1px solid #fcd34d;
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+    }
+    .badge-party {
+      background: rgba(15, 118, 110, 0.92);
+      color: #99f6e4;
+      border: 1px solid rgba(153, 246, 228, 0.3);
+    }
+    .card-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+    .cake-flavor {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .file-name {
+      font-size: 11px;
+      color: var(--text-muted);
+      word-break: break-all;
+      font-family: monospace;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    .modal.open {
+      display: flex;
+    }
+    .modal-content {
+      max-width: 950px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .modal-content img {
+      max-width: 100%;
+      max-height: 78vh;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+    }
+    .modal-caption {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 36px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <div class="logo-badge">BAKEBOX</div>
+      <div class="header-text">
+        <h1>Master Product Image Catalog</h1>
+        <p>Categories: ACE & PREMIUM • Branded Collection & Studio Showcase</p>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-val">106</div>
+        <div class="stat-lbl">ACE Cakes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">173</div>
+        <div class="stat-lbl">Premium Cakes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">26</div>
+        <div class="stat-lbl">Custom Designer</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">4</div>
+        <div class="stat-lbl">Studio Heroes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">45</div>
+        <div class="stat-lbl">Party & Snacks</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="filter-tabs">
+      <button class="filter-btn active" data-filter="all">All Items (354)</button>
+      <button class="filter-btn" data-filter="studio">★ Studio Heroes (4)</button>
+      <button class="filter-btn" data-filter="ace">Category: ACE (106)</button>
+      <button class="filter-btn" data-filter="premium">Category: PREMIUM (173)</button>
+      <button class="filter-btn" data-filter="custom">🎨 Custom Designer (26)</button>
+      <button class="filter-btn" data-filter="party">Party & Accessories (45)</button>
+    </div>
+    <input type="text" id="search" class="search-box" placeholder="Search flavor or file...">
+  </div>
+
+  <div class="flavor-pills" id="flavorPills">
+    <button class="flavor-pill active" data-flavor="all">All Flavors</button>
+  </div>
+
+  <div class="grid-container" id="grid"></div>
+
+  <div class="modal" id="modal">
+    <button class="close-btn" id="closeModal">&times;</button>
+    <div class="modal-content">
+      <img id="modalImg" src="" alt="Cake Preview">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    const items = [{"section": "STUDIO_SHOWCASE", "category": "ACE", "flavor": "BlackForest", "name": "BAKEBOX_STUDIO_ACE_BlackForest.jpg", "rel_path": "STUDIO_SHOWCASE/BAKEBOX_STUDIO_ACE_BlackForest.jpg"}, {"section": "STUDIO_SHOWCASE", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_STUDIO_ACE_Pineapple.jpg", "rel_path": "STUDIO_SHOWCASE/BAKEBOX_STUDIO_ACE_Pineapple.jpg"}, {"section": "STUDIO_SHOWCASE", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_STUDIO_PREMIUM_Butterscotch.jpg", "rel_path": "STUDIO_SHOWCASE/BAKEBOX_STUDIO_PREMIUM_Butterscotch.jpg"}, {"section": "STUDIO_SHOWCASE", "category": "PREMIUM", "flavor": "RedVelvet", "name": "BAKEBOX_STUDIO_PREMIUM_RedVelvet.jpg", "rel_path": "STUDIO_SHOWCASE/BAKEBOX_STUDIO_PREMIUM_RedVelvet.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_11.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_11.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_12.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_12.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_13.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_13.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_14.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_14.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_15.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_15.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_16.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_16.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_17.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_17.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_18.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_18.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Black Forest", "name": "BAKEBOX_ACE_BlackForest_19.jpg", "rel_path": "CAKES_BRANDED/ACE/Black Forest/BAKEBOX_ACE_BlackForest_19.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_11.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_11.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_12.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_12.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_13.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_13.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_14.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_14.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_15.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_15.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_16.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_16.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_17.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_17.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_18.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_18.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_19.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_19.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_20.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_20.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_21.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_21.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_22.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_22.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_23.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_23.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_24.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_24.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Butterscotch", "name": "BAKEBOX_ACE_Butterscotch_25.jpg", "rel_path": "CAKES_BRANDED/ACE/Butterscotch/BAKEBOX_ACE_Butterscotch_25.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_11.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_11.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_12.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_12.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_13.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_13.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_14.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_14.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_15.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_15.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_16.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_16.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_17.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_17.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Chocolate", "name": "BAKEBOX_ACE_Chocolate_18.jpg", "rel_path": "CAKES_BRANDED/ACE/Chocolate/BAKEBOX_ACE_Chocolate_18.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_11.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_11.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_12.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_12.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_13.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_13.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_14.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_14.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_15.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_15.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_16.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_16.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_17.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_17.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_18.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_18.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_19.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_19.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Pineapple", "name": "BAKEBOX_ACE_Pineapple_20.jpg", "rel_path": "CAKES_BRANDED/ACE/Pineapple/BAKEBOX_ACE_Pineapple_20.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Red Velvet", "name": "BAKEBOX_ACE_RedVelvet_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Red Velvet/BAKEBOX_ACE_RedVelvet_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_01.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_01.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_02.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_02.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_03.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_03.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_04.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_04.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_05.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_05.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_06.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_06.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_07.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_07.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_08.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_08.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_09.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_09.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_10.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_10.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_11.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_11.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_12.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_12.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_13.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_13.jpg"}, {"section": "CAKES_BRANDED", "category": "ACE", "flavor": "Vanilla", "name": "BAKEBOX_ACE_Vanilla_14.jpg", "rel_path": "CAKES_BRANDED/ACE/Vanilla/BAKEBOX_ACE_Vanilla_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Barbie Doll", "name": "BAKEBOX_PREMIUM_BarbieDoll_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Barbie Doll/BAKEBOX_PREMIUM_BarbieDoll_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_17.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_17.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_18.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_18.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_19.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_19.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_20.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_20.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_21.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_21.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_22.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_22.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_23.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_23.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_24.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_24.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_25.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_25.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_26.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_26.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_27.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_27.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_28.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_28.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_29.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_29.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Black Forest", "name": "BAKEBOX_PREMIUM_BlackForest_30.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Black Forest/BAKEBOX_PREMIUM_BlackForest_30.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Butterscotch", "name": "BAKEBOX_PREMIUM_Butterscotch_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Butterscotch/BAKEBOX_PREMIUM_Butterscotch_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_17.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_17.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_18.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_18.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_19.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_19.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_20.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_20.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_21.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_21.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_22.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_22.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_23.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_23.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_24.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_24.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_25.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_25.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate", "name": "BAKEBOX_PREMIUM_Chocolate_26.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate/BAKEBOX_PREMIUM_Chocolate_26.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_17.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_17.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_18.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_18.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_19.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_19.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_20.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_20.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Chocolate Truffle", "name": "BAKEBOX_PREMIUM_ChocolateTruffle_21.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Chocolate Truffle/BAKEBOX_PREMIUM_ChocolateTruffle_21.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Custom Specialty", "name": "BAKEBOX_PREMIUM_CustomSpecialty_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Custom Specialty/BAKEBOX_PREMIUM_CustomSpecialty_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Doraemon & Kids", "name": "BAKEBOX_PREMIUM_Doraemon&Kids_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Doraemon & Kids/BAKEBOX_PREMIUM_Doraemon&Kids_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "KitKat Chocolate", "name": "BAKEBOX_PREMIUM_KitKatChocolate_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/KitKat Chocolate/BAKEBOX_PREMIUM_KitKatChocolate_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Pineapple", "name": "BAKEBOX_PREMIUM_Pineapple_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Pineapple/BAKEBOX_PREMIUM_Pineapple_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_16.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_17.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_17.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_18.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_18.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_19.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_19.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_20.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_20.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_21.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_21.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Red Velvet", "name": "BAKEBOX_PREMIUM_RedVelvet_22.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Red Velvet/BAKEBOX_PREMIUM_RedVelvet_22.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Strawberry", "name": "BAKEBOX_PREMIUM_Strawberry_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Strawberry/BAKEBOX_PREMIUM_Strawberry_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_01.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_01.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_02.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_02.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_03.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_03.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_04.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_04.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_05.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_05.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_06.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_06.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_07.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_07.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_08.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_08.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_09.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_09.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_10.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_10.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_11.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_11.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_12.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_12.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_13.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_13.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_14.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_14.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_15.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_15.jpg"}, {"section": "CAKES_BRANDED", "category": "PREMIUM", "flavor": "Vanilla", "name": "BAKEBOX_PREMIUM_Vanilla_16.jpg", "rel_path": "CAKES_BRANDED/PREMIUM/Vanilla/BAKEBOX_PREMIUM_Vanilla_16.jpg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_01.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_01.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_02.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_02.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_03.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_03.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_04.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_04.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_05.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_05.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_06.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_06.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_07.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_07.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_08.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_08.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_09.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_09.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_10.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_10.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_11.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_11.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_12.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_12.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Bakery Snacks", "name": "BAKEBOX_BakerySnacks_13.jpeg", "rel_path": "PARTY_AND_SNACKS/Bakery Snacks/BAKEBOX_BakerySnacks_13.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Balloons", "name": "BAKEBOX_Balloons_01.jpeg", "rel_path": "PARTY_AND_SNACKS/Balloons/BAKEBOX_Balloons_01.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Balloons", "name": "BAKEBOX_Balloons_02.jpeg", "rel_path": "PARTY_AND_SNACKS/Balloons/BAKEBOX_Balloons_02.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Balloons", "name": "BAKEBOX_Balloons_03.jpeg", "rel_path": "PARTY_AND_SNACKS/Balloons/BAKEBOX_Balloons_03.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_01.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_01.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_02.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_02.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_03.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_03.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_04.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_04.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_05.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_05.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_06.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_06.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_07.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_07.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_08.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_08.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_09.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_09.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_10.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_10.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_11.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_11.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_12.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_12.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_13.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_13.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_14.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_14.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_15.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_15.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_16.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_16.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_17.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_17.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Candles & Sparklers", "name": "BAKEBOX_CandlesAndSparklers_18.jpeg", "rel_path": "PARTY_AND_SNACKS/Candles & Sparklers/BAKEBOX_CandlesAndSparklers_18.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_01.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_01.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_02.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_02.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_03.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_03.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_04.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_04.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_05.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_05.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_06.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_06.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_07.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_07.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Cutlery & Disposables", "name": "BAKEBOX_CutleryAndDisposables_08.jpeg", "rel_path": "PARTY_AND_SNACKS/Cutlery & Disposables/BAKEBOX_CutleryAndDisposables_08.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Party Poppers", "name": "BAKEBOX_PartyPoppers_01.jpeg", "rel_path": "PARTY_AND_SNACKS/Party Poppers/BAKEBOX_PartyPoppers_01.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Party Poppers", "name": "BAKEBOX_PartyPoppers_02.jpeg", "rel_path": "PARTY_AND_SNACKS/Party Poppers/BAKEBOX_PartyPoppers_02.jpeg"}, {"section": "PARTY_AND_SNACKS", "category": "PARTY", "flavor": "Party Poppers", "name": "BAKEBOX_PartyPoppers_03.jpeg", "rel_path": "PARTY_AND_SNACKS/Party Poppers/BAKEBOX_PartyPoppers_03.jpeg"}];
+
+    const flavors = Array.from(new Set(items.map(x => x.flavor))).sort();
+    const pillsContainer = document.getElementById('flavorPills');
+    flavors.forEach(f => {
+      const b = document.createElement('button');
+      b.className = 'flavor-pill';
+      b.dataset.flavor = f;
+      b.innerText = f;
+      pillsContainer.appendChild(b);
+    });
+
+    let activeFilter = 'all';
+    let activeFlavor = 'all';
+    let searchQuery = '';
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      const filtered = items.filter(item => {
+        const isCustom = ['Custom Specialty', 'Barbie Doll', 'Doraemon & Kids'].includes(item.flavor);
+        if (activeFilter === 'studio' && item.section !== 'STUDIO_SHOWCASE') return false;
+        if (activeFilter === 'ace' && item.category !== 'ACE') return false;
+        if (activeFilter === 'premium' && (item.category !== 'PREMIUM' || isCustom)) return false;
+        if (activeFilter === 'custom' && !isCustom) return false;
+        if (activeFilter === 'party' && item.section !== 'PARTY_AND_SNACKS') return false;
+
+        if (activeFlavor !== 'all' && item.flavor !== activeFlavor) return false;
+
+        if (searchQuery) {
+          const term = searchQuery.toLowerCase();
+          const matchName = item.name.toLowerCase().includes(term);
+          const matchFlv = item.flavor.toLowerCase().includes(term);
+          if (!matchName && !matchFlv) return false;
+        }
+
+        return true;
+      });
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card' + (item.section === 'STUDIO_SHOWCASE' ? ' studio-highlight' : '');
+
+        let badgeClass = 'badge-ace';
+        let badgeTxt = 'ACE';
+        if (item.section === 'STUDIO_SHOWCASE') {
+          badgeClass = 'badge-studio';
+          badgeTxt = '★ STUDIO HERO';
+        } else if (['Custom Specialty', 'Barbie Doll', 'Doraemon & Kids'].includes(item.flavor)) {
+          badgeClass = 'badge-custom';
+          badgeTxt = '🎨 1-ON-1 CUSTOM';
+        } else if (item.category === 'PREMIUM') {
+          badgeClass = 'badge-premium';
+          badgeTxt = 'PREMIUM';
+        } else if (item.section === 'PARTY_AND_SNACKS') {
+          badgeClass = 'badge-party';
+          badgeTxt = 'SUPPLIES';
+        }
+
+        card.innerHTML = `
+          <div class="img-wrap" onclick="openPreview('${item.rel_path}', '${item.flavor} - ${item.name}')">
+            <span class="card-badge ${badgeClass}">${badgeTxt}</span>
+            <img src="${item.rel_path}" loading="lazy" alt="${item.name}">
+          </div>
+          <div class="card-body" onclick="openPreview('${item.rel_path}', '${item.flavor} - ${item.name}')">
+            <div class="cake-flavor">${item.flavor}</div>
+            <div class="file-name">${item.name}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderGrid();
+      });
+    });
+
+    document.querySelectorAll('.flavor-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.flavor-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFlavor = btn.dataset.flavor;
+        renderGrid();
+      });
+    });
+
+    document.getElementById('search').addEventListener('input', e => {
+      searchQuery = e.target.value.trim();
+      renderGrid();
+    });
+
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalCaption = document.getElementById('modalCaption');
+    window.openPreview = function(src, cap) {
+      modalImg.src = src;
+      modalCaption.innerText = cap;
+      modal.classList.add('open');
+    };
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    renderGrid();
+  </script>
+</body>
+</html>

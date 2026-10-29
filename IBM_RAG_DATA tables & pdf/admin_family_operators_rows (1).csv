@@ -1,0 +1,4 @@
+admin_id,operator_name,phone,role,assigned_branch,can_edit_prices,can_toggle_inventory,can_accept_orders,can_upload_photos
+1,Bakery Owner / Master Baker,+91 9528702189,SUPER_ADMIN,"Branch 1: Bhagel Chaupal, Khatoti Kua (Mathura)",true,true,true,true
+2,Family Store Operator 1 (Main Counter),+91 8923701210,STORE_OPERATOR_FAMILY,"Branch 1: Bhagel Chaupal, Khatoti Kua (Mathura)",false,true,true,true
+3,Family Store Operator 2 (Gausna Branch),+91 9528702189,STORE_OPERATOR_FAMILY,Branch 2: Gausna (Mathura),false,true,true,true
