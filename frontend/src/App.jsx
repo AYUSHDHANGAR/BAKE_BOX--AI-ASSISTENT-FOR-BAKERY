@@ -299,8 +299,11 @@ export default function App() {
           session_id: `user_${user.id}_session`
         })
       });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || 'Failed to chat with CHOCO');
+      }
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Failed to chat with CHOCO');
 
       setChatMessages(prev => [...prev, {
         role: 'assistant',

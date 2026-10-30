@@ -11,13 +11,15 @@ from google import genai
 from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.schema import NodeWithScore, TextNode
 
+import app.config
 from app.db import get_db, query_all, query_one, execute_dml
 from app.rag.embeddings import DenseEmbeddingEngine, SparseTFIDFEngine
 from app.rag.reranker import CrossEncoderReranker
 from app.rag.crag import CorrectiveRAGEvaluator
 from app.rag.self_evaluator import SelfRAGEvaluator
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+def get_gemini_api_key():
+    return os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API") or ""
 
 CHOCO_SYSTEM_PROMPT = """You are CHOCO, the beloved autonomous master baker AI assistant of Shri Ram Baker's BAKEBOX in Mathura.
 
@@ -179,7 +181,11 @@ class ChocoAIEngine:
         self.self_evaluator = SelfRAGEvaluator()
         
         # Initialize Gemini Client with ultra-fast model (1.2s latency)
-        self.gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        api_key = get_gemini_api_key()
+        if api_key:
+            self.gemini_client = genai.Client(api_key=api_key)
+        else:
+            self.gemini_client = genai.Client()
         self.model_name = "gemini-3.5-flash-lite"
 
         # Load chunks from IBM Db2
@@ -494,12 +500,24 @@ Customer's Current Query:
 
 Please provide your helpful, polite Hinglish response following the CHOCO persona and include any relevant ````json_cards```` for cakes/products:"""
 
-        # Generate response using Google Gemini
-        response = self.gemini_client.models.generate_content(
-            model=self.model_name,
-            contents=prompt
-        )
-        full_reply = response.text if response and response.text else "Ji namaste! Main CHOCO hoon. Kripya apna sawal doharayein."
+        # Generate response using Google Gemini with dynamic fallback across models
+        candidate_models = [self.model_name, "gemini-3.8-flash", "gemini-flash-lite-latest", "gemini-3.5-flash", "gemini-flash-latest"]
+        full_reply = ""
+        for m in candidate_models:
+            try:
+                response = self.gemini_client.models.generate_content(
+                    model=m,
+                    contents=prompt
+                )
+                if response and response.text:
+                    full_reply = response.text
+                    break
+            except Exception as e:
+                print(f"[CHOCO Fallback] Model {m} encountered: {e}. Trying next available model...")
+                continue
+
+        if not full_reply:
+            full_reply = f"Radhe Radhe ji! Shri Ram Baker's BAKEBOX mein aapka swagat hai. Aapke query ke anusaar hamare fresh baked cakes aur bakery details niche present kar rahe hain. Kripya inme se check karein!"
 
         # Extract JSON cards if present
         ui_cards = []
