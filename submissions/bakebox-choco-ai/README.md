@@ -182,8 +182,10 @@ ALL VALIDATION CHECKS PASSED.
 ## Known Limitations & Future Roadmap
 - **Current Limitations:** Vector embeddings currently run on CPU; GPU acceleration can further reduce batch embedding latency.
 - **Future Roadmap:**
-  - Multi-branch kitchen load balancing across Mathura, Vrindavan, and Govardhan branches.
-  - Native integration with IBM watsonx.ai Granite 3.0 models.
+  - **Inbuilt Payment & Checkout:** Direct UPI/Card gateway integration with instant digital invoices and live order status updates in IBM Db2 (`BB_ORDERS`).
+  - **Ultra-Fast Query Engine:** Multi-tier caching on top of IBM Db2 native vector retrieval for sub-100ms catalog and product query responses.
+  - **Multi-Branch Kitchen Balancing:** Real-time order routing and kitchen workload balancing across Mathura, Vrindavan, and Govardhan branches based on oven capacity.
+  - **Predictive Inventory Forecasting:** AI-driven demand forecasting on historical Db2 order data to optimize daily fresh baking and reduce ingredient waste.
 
 ---
 
